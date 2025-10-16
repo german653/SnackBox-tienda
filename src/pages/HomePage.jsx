@@ -104,7 +104,7 @@ const HomePage = () => {
             >
                 <FaCookieBite size={50} className="text-snackbox-secondary mx-auto mb-4" />
                 <h3 className="text-2xl font-semibold text-snackbox-primary mb-3">Alfajores Clásicos</h3>
-                <p className="text-gray-700">El dulce perfecto para tu día. Chocolate, Maicena y Mousse.</p>
+                <p className="text-gray-700">El dulce perfecto para tu día. Chocolate Blanco.</p>
             </motion.div>
             <motion.div 
                 className="bg-snackbox-light-gray p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
