@@ -1,15 +1,14 @@
 // snackbox-tienda/src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { CartProvider } from './context/CartContext';
 
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Layout from './components/Layout'; // Importa el nuevo Layout
 import AnimatedRoutes from './components/AnimatedRoutes';
 import ShoppingCart from './components/ShoppingCart';
 import ScrollToTop from './components/ScrollToTop';
-import Notification from './components/Notification'; // <-- 1. Importa el nuevo componente
+import Notification from './components/Notification';
 
 function App() {
   return (
@@ -17,14 +16,15 @@ function App() {
       <CartProvider>
         <Router>
           <ScrollToTop />
-          <Navbar />
-          <main>
-            <AnimatedRoutes />
-          </main>
-          <Footer />
+          {/* El Layout ahora envuelve las rutas animadas */}
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/*" element={<AnimatedRoutes />} />
+            </Route>
+          </Routes>
           <Toaster />
           <ShoppingCart />
-          <Notification /> {/* <-- 2. Añade el componente aquí */}
+          <Notification />
         </Router>
       </CartProvider>
     </div>

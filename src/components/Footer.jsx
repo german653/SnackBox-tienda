@@ -40,7 +40,7 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-bold mb-4 tracking-wider uppercase">Síguenos</h4>
             <div className="flex justify-center md:justify-start space-x-6 text-2xl">
-              <a href="https://instagram.com/tu-usuario" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-snackbox-secondary transition-transform hover:scale-110">
+              <a href="https://www.instagram.com/german__oviedo/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-snackbox-secondary transition-transform hover:scale-110">
                 <FaInstagram />
               </a>
               <a href="https://wa.me/+5493513427543" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-snackbox-secondary transition-transform hover:scale-110">

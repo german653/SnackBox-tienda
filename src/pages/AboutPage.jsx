@@ -1,22 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import logo from '../assets/logo-snackbox.png';
 
 const pageVariants = {
-  hidden: { opacity: 0, x: -100 },
-  visible: { opacity: 1, x: 0, transition: { type: 'spring', duration: 0.8 } },
-  exit: { opacity: 0, x: 100, transition: { duration: 0.3 } },
-};
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { 
-      duration: 0.7, 
-      ease: "easeOut" 
-    } 
-  }
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { type: 'spring', duration: 0.8 } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
 };
 
 const AboutPage = () => {
@@ -26,61 +15,81 @@ const AboutPage = () => {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="bg-brand-light-blue py-16 px-6"
+      className="bg-snackbox-light-gray min-h-screen pt-28 pb-16 px-4"
     >
-      <div className="container mx-auto max-w-4xl">
-        <motion.h2 
-          className="text-5xl font-bold text-center text-brand-dark-blue mb-12"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, type: "spring", stiffness: 120 }}
-        >
-          Nuestra Historia: El Sabor de Trio Chill
-        </motion.h2>
+      <div className="container mx-auto max-w-5xl space-y-16">
 
-        <motion.div 
-          className="bg-white rounded-lg shadow-xl p-8 mb-12 flex flex-col md:flex-row items-center gap-8"
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <div className="md:w-1/2">
-            <h3 className="text-3xl font-semibold text-brand-red mb-4">Un Sueño Refrescante</h3>
-            <p className="text-gray-700 leading-relaxed text-lg">
-              Trio Chill nació de la pasión por los sabores auténticos y el deseo de llevar alegría en cada bocado congelado. Lo que comenzó como un pequeño proyecto familiar, hoy es una marca que busca refrescar tus días con opciones deliciosas y creativas.
-            </p>
-          </div>
-          <div className="md:w-1/2 flex justify-center">
-            <img 
-              src="/images/about-story.jpg"
-              alt="Historia de Trio Chill" 
-              className="rounded-lg shadow-md w-full max-w-sm md:max-w-full object-cover h-64 md:h-auto" 
-            />
-          </div>
-        </motion.div>
+        {/* --- Sección 1: Nuestra Historia --- */}
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Columna de Texto */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7 }}
+          >
+            <h2 className="text-3xl font-bold text-snackbox-primary mb-4">Nuestra Historia</h2>
+            <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+              <p>
+                <span className="font-bold text-snackbox-secondary">SnackBox</span> nació de una pasión compartida: la convicción de que una pausa puede transformar un día. En medio de la rutina y las corridas, notamos que faltaba una opción que combinara lo delicioso con lo práctico, lo rápido con lo reconfortante.
+              </p>
+              <p>
+                Somos un emprendimiento que busca redefinir tus recreos. No solo te llevamos un jugo o un alfajor; te ofrecemos una experiencia cuidadosamente seleccionada.
+              </p>
+            </div>
+          </motion.div>
+          {/* Columna de Imagen */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7 }}
+            className="h-80 rounded-2xl shadow-xl overflow-hidden"
+          >
+            <img src="/images/about-story.jpg" alt="Nuestra Historia" className="w-full h-full object-cover" />
+          </motion.div>
+        </div>
 
-        <motion.div 
-          className="bg-white rounded-lg shadow-xl p-8 mb-12 flex flex-col md:flex-row-reverse items-center gap-8"
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <div className="md:w-1/2">
-            <h3 className="text-3xl font-semibold text-brand-yellow mb-4">Nuestra Filosofía</h3>
-            <p className="text-gray-700 leading-relaxed text-lg">
-              Creemos en la calidad y la frescura. Cada helado está elaborado con ingredientes seleccionados, buscando combinaciones que sorprendan y deleiten. Queremos ofrecer una experiencia inigualable que te haga sonreír.
+        {/* --- Sección 2: Nuestra Filosofía (ORDEN CORREGIDO PARA MÓVIL) --- */}
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Columna de Texto (con orden modificado para desktop) */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7 }}
+            className="md:order-last" // En desktop, este texto va al final (derecha). En móvil, esta clase se ignora.
+          >
+            <h2 className="text-3xl font-bold text-snackbox-primary mb-4">Nuestra Filosofía</h2>
+            <div className="space-y-4 text-lg text-gray-700 leading-relaxed">
+              <p>
+                Creemos en el poder de los pequeños detalles: un envoltorio prolijo, una entrega a tiempo y un servicio cercano. Cada producto en nuestra caja ha sido elegido por su sabor, calidad y la capacidad de dibujarte una sonrisa.
+              </p>
+              <p>
+                Queremos ser ese aliado que te acompaña en la oficina, en tus horas de estudio o simplemente cuando te apetece un mimo.
+              </p>
+            </div>
+          </motion.div>
+          {/* Columna de Imagen */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7 }}
+            className="h-80 rounded-2xl shadow-xl overflow-hidden"
+          >
+            <img src="/images/about-philosophy.jpg" alt="Nuestra Filosofía" className="w-full h-full object-cover" />
+          </motion.div>
+        </div>
+
+        {/* Mensaje Final */}
+        <div className="text-center pt-12">
+            <img src={logo} alt="SnackBox Logo" className="h-20 w-20 rounded-full object-cover mx-auto mb-4 shadow-md"/>
+            <p className="font-semibold text-snackbox-primary text-2xl max-w-2xl mx-auto">
+              ¡Gracias por dejarnos ser parte de tu pausa perfecta!
             </p>
-          </div>
-          <div className="md:w-1/2 flex justify-center">
-            <img 
-              src="/images/about-philosophy.jpg"
-              alt="Filosofía de Trio Chill" 
-              className="rounded-lg shadow-md w-full max-w-sm md:max-w-full object-cover h-64 md:h-auto" 
-            />
-          </div>
-        </motion.div>
+        </div>
+
       </div>
     </motion.div>
   );
