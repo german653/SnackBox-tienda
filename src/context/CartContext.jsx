@@ -7,6 +7,20 @@ export const CartProvider = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [notification, setNotification] = useState(null);
+  // --- AÑADIDO ---
+  const [discountsApplied, setDiscountsApplied] = useState(false);
+
+  // --- AÑADIDO ---
+  const applyDiscountCode = useCallback((code) => {
+    if (code === 'expodescuentos') {
+      setDiscountsApplied(true);
+      toast.success('¡Descuentos aplicados con éxito!');
+      return true;
+    } else {
+      toast.error('El código de descuento no es válido.');
+      return false;
+    }
+  }, []);
 
   const toggleCart = useCallback(() => setIsCartOpen(prev => !prev), []);
 
@@ -16,17 +30,15 @@ export const CartProvider = ({ children }) => {
       
       if (itemExists) {
         const newQuantity = itemExists.quantity + quantity;
-        // Control de stock al añadir
         if (newQuantity > product.stock) {
           toast.error(`¡Solo quedan ${product.stock} unidades de ${product.name}!`);
-          return prevItems; // No hace ningún cambio si se supera el stock
+          return prevItems;
         }
         return prevItems.map(item =>
           item.id === product.id ? { ...item, quantity: newQuantity } : item
         );
       }
       
-      // Si el item es nuevo, se asegura que la cantidad inicial no supere el stock
       const initialQuantity = Math.min(quantity, product.stock);
       return [...prevItems, { ...product, quantity: initialQuantity }];
     });
@@ -46,10 +58,9 @@ export const CartProvider = ({ children }) => {
       
       return prevItems.map(item => {
         if (item.id === productId) {
-          // Control de stock al actualizar desde el carrito
           if (newQuantity > item.stock) {
             toast.error(`¡Solo quedan ${item.stock} unidades en stock!`);
-            return { ...item, quantity: item.stock }; // Ajusta la cantidad al máximo disponible
+            return { ...item, quantity: item.stock };
           }
           return { ...item, quantity: newQuantity };
         }
@@ -66,21 +77,20 @@ export const CartProvider = ({ children }) => {
 
   const showNotification = useCallback((product, quantity) => {
     setNotification({ product, quantity });
-    // Temporizador para ocultar la notificación automáticamente después de 1.5 segundos
     setTimeout(() => {
       hideNotification();
-    }, 1500); // 1500 milisegundos = 1.5 segundos
+    }, 1500);
   }, [hideNotification]);
   
   const total = useMemo(() => 
     cartItems.reduce((acc, item) => {
-      // Usa el precio de promoción si existe y es válido, si no, usa el precio normal
-      const priceToUse = item.promo_price && item.promo_price < item.price 
+      // --- MODIFICACIÓN MÍNIMA ---
+      const priceToUse = discountsApplied && item.promo_price && item.promo_price < item.price 
         ? item.promo_price 
         : item.price;
       return acc + priceToUse * item.quantity;
     }, 0),
-    [cartItems]
+    [cartItems, discountsApplied] // Se añade dependencia
   );
   
   const totalItems = useMemo(() =>
@@ -89,10 +99,10 @@ export const CartProvider = ({ children }) => {
   );
 
   const value = useMemo(() => ({
-    isCartOpen, cartItems, total, totalItems, notification,
+    isCartOpen, cartItems, total, totalItems, notification, discountsApplied,
     toggleCart, addToCart, removeFromCart, updateQuantity, clearCart,
-    showNotification, hideNotification,
-  }), [isCartOpen, cartItems, total, totalItems, notification, toggleCart, addToCart, removeFromCart, updateQuantity, clearCart, showNotification, hideNotification]);
+    showNotification, hideNotification, applyDiscountCode
+  }), [isCartOpen, cartItems, total, totalItems, notification, discountsApplied, toggleCart, addToCart, removeFromCart, updateQuantity, clearCart, showNotification, hideNotification, applyDiscountCode]);
 
   return (
     <CartContext.Provider value={value}>

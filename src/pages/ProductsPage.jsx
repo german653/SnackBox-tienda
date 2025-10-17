@@ -1,9 +1,9 @@
-// snackbox-tienda/src/pages/ProductsPage.jsx
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
 import { supabase } from '../supabaseClient';
 import { FaBoxOpen } from 'react-icons/fa';
+import DiscountActivator from '../components/DiscountActivator'; // --- AÑADIDO ---
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -34,9 +34,6 @@ const ProductsPage = () => {
       const { data, error } = await supabase
         .from('products')
         .select('*, categories(name)')
-        // --- LÓGICA CORREGIDA ---
-        // Traemos TODOS los productos que no estén borrados.
-        // La ProductCard se encargará de la lógica visual del stock.
         .eq('is_deleted', false)
         .order('created_at', { ascending: false });
 
@@ -73,6 +70,11 @@ const ProductsPage = () => {
     >
       <div className="container mx-auto px-6 text-center">
         <h2 className="text-4xl font-bold text-snackbox-primary mb-10">Nuestros Deliciosos Snacks</h2>
+        
+        {/* --- AÑADIDO --- */}
+        <div className="max-w-xl mx-auto mb-12">
+          <DiscountActivator />
+        </div>
         
         <div className="flex justify-center flex-wrap gap-4 mb-12">
           {categories.map(cat => (

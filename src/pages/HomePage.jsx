@@ -1,31 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react'; // Se añade useState
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FaCookieBite, FaGlassWhiskey, FaBolt } from 'react-icons/fa';
+import { FaCookieBite, FaGlassWhiskey, FaBolt, FaGift, FaRegCopy, FaCheck } from 'react-icons/fa'; // Se añaden íconos
+import toast from 'react-hot-toast'; // Se añade toast para la notificación
 
-// Objeto de animación reutilizable para las páginas
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { type: 'spring', duration: 0.8, delayChildren: 0.3, staggerChildren: 0.2 } },
   exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
 };
 
-// Variantes para animar las secciones de contenido al hacer scroll
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
 };
 
 const HomePage = () => {
+  // --- AÑADIDO --- Lógica para el botón de copiar
+  const [isCopied, setIsCopied] = useState(false);
+  const discountCode = 'expodescuentos';
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(discountCode);
+    toast.success('¡Código copiado!');
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000); // Vuelve al estado original después de 2 segundos
+  };
+
   return (
     <motion.div
       variants={pageVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="" // Se quita el padding superior que ya no es necesario
+      className=""
     >
-      {/* Sección del banner principal, ahora ocupa toda la pantalla */}
       <div 
         className="relative h-screen bg-cover bg-center flex items-center justify-center text-snackbox-white overflow-hidden" 
         style={{ backgroundImage: "url('/images/snackbox-hero-bg.jpg')" }}
@@ -65,7 +74,7 @@ const HomePage = () => {
           >
             <Link 
               to="/productos"
-              className="group relative inline-block text-lg" // Botón "épico"
+              className="group relative inline-block text-lg"
             >
               <span className="absolute inset-0 bg-gradient-to-r from-snackbox-secondary to-snackbox-accent rounded-full opacity-75 blur-md group-hover:opacity-100 transition-opacity duration-300"></span>
               <span className="relative block py-4 px-10 bg-snackbox-secondary text-white font-bold rounded-full group-hover:bg-transparent transition-colors duration-300 shadow-xl">
@@ -76,7 +85,36 @@ const HomePage = () => {
         </motion.div>
       </div>
 
-      {/* Sección de Presentación de Productos Destacados */}
+      {/* --- SECCIÓN DE DESCUENTO COMPLETAMENTE REDISEÑADA --- */}
+      <motion.div
+        className="py-20 bg-snackbox-light-gray"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <div className="container mx-auto px-6">
+            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-3xl mx-auto text-center border border-snackbox-primary/10">
+                <FaGift className="text-5xl mx-auto mb-4 text-snackbox-secondary" />
+                <h2 className="text-3xl font-bold mb-2 text-snackbox-primary">¡Un Regalo Para Vos!</h2>
+                <p className="text-lg mb-6 text-gray-700">
+                  Copiá el siguiente código y usalo en tu carrito para desbloquear ofertas exclusivas.
+                </p>
+                <div className="flex justify-center items-center gap-4 bg-snackbox-light-gray/70 border-2 border-dashed border-snackbox-primary/20 rounded-lg p-4">
+                  <span className="text-snackbox-primary font-mono text-2xl tracking-widest">
+                      {discountCode}
+                  </span>
+                  <button 
+                    onClick={handleCopy}
+                    className={`p-3 rounded-lg transition-colors duration-300 ${isCopied ? 'bg-green-500 text-white' : 'bg-snackbox-primary text-white hover:bg-snackbox-secondary'}`}
+                  >
+                    {isCopied ? <FaCheck size={20} /> : <FaRegCopy size={20} />}
+                  </button>
+                </div>
+            </div>
+        </div>
+      </motion.div>
+
       <motion.div 
         className="py-20 bg-snackbox-white"
         variants={sectionVariants}
@@ -118,7 +156,6 @@ const HomePage = () => {
         </div>
       </motion.div>
 
-      {/* Sección de CTA para explorar productos */}
       <motion.div 
         className="py-16 bg-gradient-to-br from-snackbox-primary to-snackbox-dark-gray text-center"
         variants={sectionVariants}

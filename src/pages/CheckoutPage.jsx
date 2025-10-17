@@ -64,7 +64,7 @@ const CheckoutPage = () => {
   const [step, setStep] = useState('form');
   const [formData, setFormData] = useState({ name: '', lastname: '' });
   const navigate = useNavigate();
-  const alias = "oviedo.ger";
+  const alias = "snackboxcole";
 
   useEffect(() => {
     if (cartItems.length === 0 && step !== 'thanks') {

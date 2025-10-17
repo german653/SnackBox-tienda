@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react'; // --- AÑADIDO ---
 import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTrash, FaTimes, FaPlus, FaMinus } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-// Componente interno para cada ítem en el carrito
 const CartItem = ({ item }) => {
-  const { updateQuantity, removeFromCart } = useCart();
+  const { updateQuantity, removeFromCart, discountsApplied } = useCart(); // --- AÑADIDO ---
   return (
     <motion.div
       layout
@@ -25,8 +24,8 @@ const CartItem = ({ item }) => {
       <div className="flex-grow">
         <h4 className="font-bold text-lg text-snackbox-primary">{item.name}</h4>
         
-        {/* Lógica para mostrar precio de oferta */}
-        {item.promo_price && item.promo_price < item.price ? (
+        {/* --- MODIFICACIÓN MÍNIMA --- */}
+        {discountsApplied && item.promo_price && item.promo_price < item.price ? (
           <div className="flex items-baseline gap-2 text-sm">
             <span className="text-gray-400 line-through">${item.price}</span>
             <span className="font-semibold text-red-500">${item.promo_price}</span>
@@ -53,9 +52,19 @@ const CartItem = ({ item }) => {
   );
 };
 
-// Componente principal del panel del carrito
 const ShoppingCart = () => {
-  const { isCartOpen, toggleCart, cartItems, total, clearCart } = useCart();
+  const { isCartOpen, toggleCart, cartItems, total, clearCart, discountsApplied, applyDiscountCode } = useCart(); // --- AÑADIDO ---
+  // --- AÑADIDO ---
+  const [showDiscountInput, setShowDiscountInput] = useState(false);
+  const [code, setCode] = useState('');
+
+  // --- AÑADIDO ---
+  const handleApplyCode = () => {
+    if (applyDiscountCode(code)) {
+      setShowDiscountInput(false);
+      setCode('');
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -95,15 +104,30 @@ const ShoppingCart = () => {
                       <span className="text-snackbox-primary">Total</span>
                       <span className="text-snackbox-secondary">${total.toFixed(2)}</span>
                     </div>
-                    <button onClick={clearCart} className="w-full mb-2 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-semibold">
-                      Vaciar Carrito
-                    </button>
-                    <Link to="/checkout" onClick={toggleCart} className="block text-center w-full group relative">
+
+                    <Link to="/checkout" onClick={toggleCart} className="block text-center w-full group relative mb-2">
                       <span className="absolute inset-0 bg-gradient-to-r from-snackbox-secondary to-snackbox-accent rounded-lg opacity-75 blur-md group-hover:opacity-100 transition-opacity duration-300"></span>
                       <span className="relative block w-full py-3 bg-snackbox-secondary text-white font-bold rounded-lg group-hover:bg-transparent transition-colors duration-300">
                         Comprar
                       </span>
                     </Link>
+
+                    {/* --- AÑADIDO --- */}
+                    {discountsApplied ? (
+                      <button disabled className="w-full my-2 py-3 bg-green-200 text-green-800 rounded-lg font-bold opacity-80 cursor-not-allowed">Descuentos Añadidos</button>
+                    ) : (
+                      <button onClick={() => setShowDiscountInput(!showDiscountInput)} className="w-full my-2 py-3 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 font-bold transition">Descuento Combos</button>
+                    )}
+                    {!discountsApplied && showDiscountInput && (
+                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="flex gap-2 mb-2">
+                        <input type="text" value={code} onChange={e => setCode(e.target.value)} placeholder="expodescuentos" className="flex-grow p-2 border rounded"/>
+                        <button onClick={handleApplyCode} className="px-4 bg-snackbox-primary text-white rounded">OK</button>
+                      </motion.div>
+                    )}
+                    
+                    <button onClick={clearCart} className="w-full py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-semibold">
+                      Vaciar Carrito
+                    </button>
                   </div>
                 </>
               ) : (

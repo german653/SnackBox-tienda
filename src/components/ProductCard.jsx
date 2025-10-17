@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import toast from 'react-hot-toast';
 
 const ProductCard = ({ product }) => {
-  const { addToCart, showNotification, cartItems } = useCart();
+  const { addToCart, showNotification, cartItems, discountsApplied } = useCart();
   const [quantity, setQuantity] = useState(1);
   
   const isOutOfStock = !product.in_stock || product.stock <= 0;
@@ -58,12 +58,12 @@ const ProductCard = ({ product }) => {
       <p className="text-gray-600 mb-4 flex-grow">{product.description}</p>
       
       <div className="mb-4 min-h-[44px]">
-        {product.promo_price && product.promo_price < product.price ? (
-          <div className="flex items-baseline gap-3">
+        {discountsApplied && product.promo_price && product.promo_price < product.price ? (
+          // --- LÍNEA MODIFICADA --- Se añadió 'justify-center' para centrar el contenido
+          <div className="flex justify-center items-baseline gap-3">
             <span className="text-xl text-gray-400 line-through">
               ${product.price}
             </span>
-            {/* --- LÍNEA MODIFICADA --- Se eliminó la clase 'animate-pulse' */}
             <span className="text-3xl font-extrabold text-red-500">
               ${product.promo_price}
             </span>
