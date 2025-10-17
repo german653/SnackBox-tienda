@@ -1,8 +1,9 @@
-import React, { useState } from 'react'; // Se añade useState
+import React from 'react'; // Asegúrate de tener React importado si usas useState
+import { useState } from 'react'; // Importa useState si lo usas (para el botón copiar, por ejemplo)
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FaCookieBite, FaGlassWhiskey, FaBolt, FaGift, FaRegCopy, FaCheck } from 'react-icons/fa'; // Se añaden íconos
-import toast from 'react-hot-toast'; // Se añade toast para la notificación
+import { FaCookieBite, FaGlassWhiskey, FaBolt, FaGift, FaRegCopy, FaCheck } from 'react-icons/fa'; // Asegúrate de tener todos los íconos
+import toast from 'react-hot-toast'; // Asegúrate de tener toast importado
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -16,7 +17,7 @@ const sectionVariants = {
 };
 
 const HomePage = () => {
-  // --- AÑADIDO --- Lógica para el botón de copiar
+  // --- AÑADIDO (si no estaba ya) --- Lógica para el botón de copiar
   const [isCopied, setIsCopied] = useState(false);
   const discountCode = 'expodescuentos';
 
@@ -24,8 +25,9 @@ const HomePage = () => {
     navigator.clipboard.writeText(discountCode);
     toast.success('¡Código copiado!');
     setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000); // Vuelve al estado original después de 2 segundos
+    setTimeout(() => setIsCopied(false), 2000);
   };
+  // --- FIN AÑADIDO ---
 
   return (
     <motion.div
@@ -35,35 +37,34 @@ const HomePage = () => {
       exit="exit"
       className=""
     >
-      <div 
-        className="relative h-screen bg-cover bg-center flex items-center justify-center text-snackbox-white overflow-hidden" 
-        style={{ backgroundImage: "url('/images/snackbox-hero-bg.jpg')" }}
+      {/* --- SECCIÓN HERO CON FONDO ANIMADO --- */}
+      <div
+        className="relative h-screen flex items-center justify-center text-snackbox-white overflow-hidden
+                   bg-gradient-to-r from-snackbox-primary via-snackbox-secondary to-snackbox-accent
+                   bg-[length:200%_200%] animate-aurora" // Clases para el fondo animado
       >
-        <motion.div 
-          className="absolute inset-0 bg-snackbox-primary/70 backdrop-blur-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        />
-        <motion.div 
+        {/* Overlay oscuro sutil para mejorar contraste */}
+        <div className="absolute inset-0 bg-black/30"></div>
+
+        <motion.div
           className="relative z-10 p-10 rounded-xl text-center max-w-3xl"
           initial={{ opacity: 0, y: 50, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
         >
-          <motion.h1 
+          <motion.h1
             className="text-6xl md:text-8xl font-extrabold mb-4 drop-shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }} 
+            transition={{ delay: 0.7, duration: 0.8 }}
           >
             SnackBox
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="text-xl md:text-3xl mb-10 font-light drop-shadow-lg"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.8 }} 
+            transition={{ delay: 0.9, duration: 0.8 }}
           >
             Juguitos, Alfajores y Más. Tu pausa perfecta.
           </motion.p>
@@ -72,7 +73,7 @@ const HomePage = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.2, duration: 0.5, type: "spring", stiffness: 100 }}
           >
-            <Link 
+            <Link
               to="/productos"
               className="group relative inline-block text-lg"
             >
@@ -84,8 +85,9 @@ const HomePage = () => {
           </motion.div>
         </motion.div>
       </div>
+      {/* --- FIN SECCIÓN HERO --- */}
 
-      {/* --- SECCIÓN DE DESCUENTO COMPLETAMENTE REDISEÑADA --- */}
+      {/* --- SECCIÓN DE DESCUENTO --- */}
       <motion.div
         className="py-20 bg-snackbox-light-gray"
         variants={sectionVariants}
@@ -100,22 +102,23 @@ const HomePage = () => {
                 <p className="text-lg mb-6 text-gray-700">
                   Copiá el siguiente código y usalo en tu carrito para desbloquear ofertas exclusivas.
                 </p>
-                <div className="flex justify-center items-center gap-4 bg-snackbox-light-gray/70 border-2 border-dashed border-snackbox-primary/20 rounded-lg p-4">
-                  <span className="text-snackbox-primary font-mono text-2xl tracking-widest">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 bg-snackbox-light-gray/70 border-2 border-dashed border-snackbox-primary/20 rounded-lg p-4">
+                  <span className="text-snackbox-primary font-mono text-xl sm:text-2xl tracking-widest break-all">
                       {discountCode}
                   </span>
-                  <button 
+                  <button
                     onClick={handleCopy}
-                    className={`p-3 rounded-lg transition-colors duration-300 ${isCopied ? 'bg-green-500 text-white' : 'bg-snackbox-primary text-white hover:bg-snackbox-secondary'}`}
+                    className={`w-full sm:w-auto p-3 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 ${isCopied ? 'bg-green-500 text-white' : 'bg-snackbox-primary text-white hover:bg-snackbox-secondary'}`}
                   >
-                    {isCopied ? <FaCheck size={20} /> : <FaRegCopy size={20} />}
+                    {isCopied ? <><FaCheck size={18} /> Copiado</> : <><FaRegCopy size={18} /> Copiar</>}
                   </button>
                 </div>
             </div>
         </div>
       </motion.div>
 
-      <motion.div 
+      {/* --- SECCIÓN "TU MOMENTO DE DISFRUTE" --- */}
+      <motion.div
         className="py-20 bg-snackbox-white"
         variants={sectionVariants}
         initial="hidden"
@@ -128,7 +131,7 @@ const HomePage = () => {
             En SnackBox, seleccionamos los mejores juguitos Baggio y alfajores para que cada pausa sea una experiencia deliciosa y refrescante.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div 
+            <motion.div
                 className="bg-snackbox-light-gray p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
                 whileHover={{ y: -5 }}
             >
@@ -136,7 +139,7 @@ const HomePage = () => {
                 <h3 className="text-2xl font-semibold text-snackbox-primary mb-3">Juguitos Baggio</h3>
                 <p className="text-gray-700">Los sabores de siempre para refrescarte. Multifruta, Durazno y Manzana.</p>
             </motion.div>
-            <motion.div 
+            <motion.div
                 className="bg-snackbox-light-gray p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
                 whileHover={{ y: -5 }}
             >
@@ -144,7 +147,7 @@ const HomePage = () => {
                 <h3 className="text-2xl font-semibold text-snackbox-primary mb-3">Alfajores Clásicos</h3>
                 <p className="text-gray-700">El dulce perfecto para tu día. Chocolate Blanco.</p>
             </motion.div>
-            <motion.div 
+            <motion.div
                 className="bg-snackbox-light-gray p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
                 whileHover={{ y: -5 }}
             >
@@ -156,7 +159,8 @@ const HomePage = () => {
         </div>
       </motion.div>
 
-      <motion.div 
+      {/* --- SECCIÓN CTA FINAL --- */}
+      <motion.div
         className="py-16 bg-gradient-to-br from-snackbox-primary to-snackbox-dark-gray text-center"
         variants={sectionVariants}
         initial="hidden"
@@ -167,7 +171,7 @@ const HomePage = () => {
         <p className="text-xl text-snackbox-white max-w-2xl mx-auto mb-8">
           Explora nuestra variedad y encuentra tu combinación ideal.
         </p>
-        <Link 
+        <Link
           to="/productos"
           className="group relative inline-block text-lg"
         >

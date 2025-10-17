@@ -1,5 +1,5 @@
 // tailwind.config.js
-import tailwindcssAnimate from 'tailwindcss-animate'; // 1. Importa el plugin aquí arriba
+import tailwindcssAnimate from 'tailwindcss-animate';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -20,12 +20,16 @@ export default {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
       },
+      // --- SECCIÓN DE ANIMACIONES EXISTENTE ---
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in-up": "fade-in-up 0.5s ease-out",
         "glow": "glow 1.5s ease-in-out infinite alternate",
+        // --- AÑADIDO --- Animación Aurora
+        aurora: 'aurora 15s ease infinite',
       },
+      // --- SECCIÓN DE KEYFRAMES EXISTENTE ---
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -43,10 +47,15 @@ export default {
           "0%": { boxShadow: "0 0 5px rgba(247, 147, 30, 0.4)" },
           "100%": { boxShadow: "0 0 20px rgba(247, 147, 30, 0.8)" },
         },
+        // --- AÑADIDO --- Keyframes para Aurora
+        aurora: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        }
       },
     },
   },
   plugins: [
-    tailwindcssAnimate, // 2. Usa la variable importada aquí
+    tailwindcssAnimate,
   ],
 }
